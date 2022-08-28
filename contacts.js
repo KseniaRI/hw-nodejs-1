@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const { uuid } = require('uuidv4');
 
-const filePath = path.join(__dirname, "contacts.json");
+const filePath = path.join(__dirname, "db/contacts.json");
 
 async function listContacts() {
     const data = await fs.readFile(filePath);
@@ -12,7 +12,7 @@ async function listContacts() {
 
 async function getContactById(contactId) {
     const allContacts = await listContacts();
-    const contact = allContacts.find(contact => contact.id === contactId);
+    const contact = allContacts.find(contact => Number(contact.id) === contactId);
     if (!contact) {
         return null;
     }
@@ -21,8 +21,8 @@ async function getContactById(contactId) {
 
 async function removeContact(contactId) {
     const allContacts = await listContacts();
-    const index = allContacts.findIndex(contact => contact.id === contactId)
-    const updatedContacts = allContacts.filter(contact => contact.id !== contactId);
+    const index = allContacts.findIndex(contact => Number(contact.id) === contactId)
+    const updatedContacts = allContacts.filter(contact => Number(contact.id) !== contactId);
     await fs.writeFile(filePath, JSON.stringify(updatedContacts));
     const deletedContact = allContacts[index];
 
